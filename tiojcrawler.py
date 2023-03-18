@@ -7,9 +7,10 @@ user = ''
 solved = []
 topcoders = []
 def Init():
-    global topcoders
-    mp = {}
+    global topcoders,solved
     topcoders = []
+    solved = []
+    mp = {}
     for i in range(1,14):
         print('processing:'+str(i)+'/13')
         now_page = 'https://tioj.ck.tp.edu.tw/problems?page='+str(i)
@@ -46,7 +47,7 @@ def Init():
     for i in range(len(solved)):
         solved[i].pop()
         solved[i] = str(solved[i][0])
-    # print(solved)
+    print(solved)
 
 def GetProblems(inp):
     global nullresponse
@@ -90,8 +91,6 @@ def FindDiff():
         print(i,end = ',')
     print()
 def FindProblems():
-    global topcoders
-    topcoders={}
     sort_type = input('enter sort type (a:ac rate,p:solve count)\n');
     arr = []
     for i in range(1,14):
@@ -112,10 +111,10 @@ def FindProblems():
             arr[-1][1] = arr[-1][1].replace('\n',' ')
             # print(tmp[4].text.split(' '))
         # time.sleep(0.05)
-    arr = sorted(arr,key=cmp)
-    for i in arr:
-        print(i)
-        print(' ')
+    arr = sorted(arr,key=lambda x:x[-1])
+    # for i in arr:
+    #     print(i)
+    #     print(' ')
 def Solve():
     global user,solved,topcoders
     s = input("choose mode(enter h for help)\n")
