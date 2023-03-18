@@ -47,7 +47,7 @@ def Init():
     for i in range(len(solved)):
         solved[i].pop()
         solved[i] = str(solved[i][0])
-    print(solved)
+    # print(solved)
 
 def GetProblems(inp):
     global nullresponse
@@ -112,9 +112,9 @@ def FindProblems():
             # print(tmp[4].text.split(' '))
         # time.sleep(0.05)
     arr = sorted(arr,key=lambda x:x[-1])
-    # for i in arr:
-    #     print(i)
-    #     print(' ')
+    for i in arr:
+        print(i)
+        print(' ')
 def Solve():
     global user,solved,topcoders
     s = input("choose mode(enter h for help)\n")
