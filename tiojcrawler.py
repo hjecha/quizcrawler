@@ -5,7 +5,49 @@ import time
 
 user = ''
 solved = []
-topcoders = {}
+topcoders = []
+def Init():
+    global topcoders
+    mp = {}
+    topcoders = []
+    for i in range(1,14):
+        print('processing:'+str(i)+'/13')
+        now_page = 'https://tioj.ck.tp.edu.tw/problems?page='+str(i)
+        re = requests.get(now_page)
+        soup = BeautifulSoup(re.text,'html.parser')
+        soup = soup.find(class_ = 'table-hover')
+        soup = soup.find('tbody').find_all('tr')
+        for i in soup:
+            tmp = i.find_all('td')
+            # print(tmp[1].text,tmp[2].text,tmp[3],tmp[4].text)
+            if tmp[3].find('a') != None:
+                coder = tmp[3].find('a')['href'][7:]
+                # print(coder)
+                if coder in mp:
+                    mp[coder]+=1
+                else:
+                    mp[coder] = 1
+
+    user = input('enter user id:\n')
+    solved = GetProblems("https://tioj.ck.tp.edu.tw/users/"+user)
+    for i in mp:
+        topcoders.append([i,mp[i]])
+    topcoders = sorted(topcoders,key=lambda x:(x[1],x[0]))
+    while type(solved) == type('hi'):
+        print('invalid user name')
+        user = input('enter user id:\n')
+        solved = GetProblems("https://tioj.ck.tp.edu.tw/users/"+user)
+    er = []
+    for i in solved:
+        if i[1] == 0:
+            er.append(i)
+    for i in er:
+        solved.remove(i)
+    for i in range(len(solved)):
+        solved[i].pop()
+        solved[i] = str(solved[i][0])
+    # print(solved)
+
 def GetProblems(inp):
     global nullresponse
     re = requests.get(inp)
@@ -48,6 +90,8 @@ def FindDiff():
         print(i,end = ',')
     print()
 def FindProblems():
+    global topcoders
+    topcoders={}
     sort_type = input('enter sort type (a:ac rate,p:solve count)\n');
     arr = []
     for i in range(1,14):
@@ -59,7 +103,7 @@ def FindProblems():
         soup = soup.find('tbody').find_all('tr')
         for i in soup:
             tmp = i.find_all('td')
-            # print(tmp[1].text,tmp[2].text,tmp[4].text)
+            # print(tmp[1].text,tmp[2].text,tmp[3],tmp[4].text)
             if tmp[1].text in solved:
                 continue
             else:
@@ -68,19 +112,21 @@ def FindProblems():
             arr[-1][1] = arr[-1][1].replace('\n',' ')
             # print(tmp[4].text.split(' '))
         # time.sleep(0.05)
-    arr = sorted(arr,key=lambda x:x[2])
+    arr = sorted(arr,key=cmp)
     for i in arr:
         print(i)
         print(' ')
 def Solve():
-    global user,solved
+    global user,solved,topcoders
     s = input("choose mode(enter h for help)\n")
     if len(s) == 0:
         print('error\n')
+    elif s[0] == 'r':
+        Init()
     elif s[0] == 'd':
         FindDiff()
     elif s[0] == 'h':
-        print('functions:\nd:compare with another user\np:print unsolved problems with specific order accending\nc:change user\ns:show solved ids')
+        print('functions:\nd:compare with another user\np:print unsolved problems with specific order decending\nc:change user\ns:show solved ids\nr:refresh\nt:show topcoders by decending order')
     elif s[0] == 'p':
         FindProblems()
     elif s[0] == 'c':
@@ -102,22 +148,10 @@ def Solve():
     elif s[0] == 's':
         for i in solved:
             print(i)
+    elif s[0] == 't':
+        for person,cnt in topcoders:
+            print(str(person)+":"+str(cnt))
 if __name__ == '__main__':
-    user = input('enter user id:\n')
-    solved = GetProblems("https://tioj.ck.tp.edu.tw/users/"+user)
-    while type(solved) == type('hi'):
-        print('invalid user name')
-        user = input('enter user id:\n')
-        solved = GetProblems("https://tioj.ck.tp.edu.tw/users/"+user)
-    er = []
-    for i in solved:
-        if i[1] == 0:
-            er.append(i)
-    for i in er:
-        solved.remove(i)
-    for i in range(len(solved)):
-        solved[i].pop()
-        solved[i] = str(solved[i][0])
-    # print(solved)
+    Init()
     while True:
         Solve()
