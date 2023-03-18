@@ -7,7 +7,7 @@ user = ''
 solved = []
 topcoders = []
 def Init():
-    global topcoders,solved
+    global topcoders,solved,user
     topcoders = []
     solved = []
     mp = {}
@@ -51,6 +51,7 @@ def Init():
 
 def GetProblems(inp):
     global nullresponse
+    # print(inp)
     re = requests.get(inp)
     soup = BeautifulSoup(re.text,"html.parser")
     soup = soup.find(class_='table table-condensed')
@@ -125,7 +126,7 @@ def Solve():
     elif s[0] == 'd':
         FindDiff()
     elif s[0] == 'h':
-        print('functions:\nd:compare with another user\np:print unsolved problems with specific order decending\nc:change user\ns:show solved ids\nr:refresh\nt:show topcoders by decending order')
+        print('functions:\nd:compare with another user\np:print unsolved problems with specific order accending\nc:change user\ns:show solved ids\nr:refresh\nt:show topcoders by accending order')
     elif s[0] == 'p':
         FindProblems()
     elif s[0] == 'c':
